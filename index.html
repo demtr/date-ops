@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
  <head>
   <meta charset="windows-1251">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -19,8 +19,8 @@
 <menu class=dayDiff>Date difference</menu>
 <menu class=moneyDays>Bank interest in date interval</menu>
 </aside>
-<article><span class="colontitle">Выбранная программа:</span>
-<section class="progDesc"><p>Выберите программу в меню слева.</p>
+<article><span class="colontitle">Г‚Г»ГЎГ°Г Г­Г­Г Гї ГЇГ°Г®ГЈГ°Г Г¬Г¬Г :</span>
+<section class="progDesc"><p>Г‚Г»ГЎГҐГ°ГЁГІГҐ ГЇГ°Г®ГЈГ°Г Г¬Г¬Гі Гў Г¬ГҐГ­Гѕ Г±Г«ГҐГўГ .</p>
 </section>
 <section class="progContent"></section>
 </article>
@@ -29,7 +29,7 @@
  </body> 
 <script src="date-ml-text.js"></script>
 <script>
-// прибавить к дате число дней
+// ГЇГ°ГЁГЎГ ГўГЁГІГј ГЄ Г¤Г ГІГҐ Г·ГЁГ±Г«Г® Г¤Г­ГҐГ©
 function addDays(){
   let days=mydays.value;
   let d1=new Date(mydate.value);
@@ -49,7 +49,7 @@ function subtractDates(d1, d2, mode) {
   if (dys < 0) {
     if (mns == 0) yrs--;
     mns--;
-    let bf = new Date(d2.getFullYear(),d2.getMonth(),0); // последний день предыдущего месяца
+    let bf = new Date(d2.getFullYear(),d2.getMonth(),0); // ГЇГ®Г±Г«ГҐГ¤Г­ГЁГ© Г¤ГҐГ­Гј ГЇГ°ГҐГ¤Г»Г¤ГіГ№ГҐГЈГ® Г¬ГҐГ±ГїГ¶Г 
     dys = bf.getDate()-d1.getDate()+d2.getDate();
 
   }
@@ -59,7 +59,7 @@ function subtractDates(d1, d2, mode) {
   return yrs +" "+ ml[currentLanguage].diff.years+" "+
           mns +" "+  ml[currentLanguage].diff.months+" "+dys;
 }
-// вычесть даты
+// ГўГ»Г·ГҐГ±ГІГј Г¤Г ГІГ»
 function subDays(){
   const diff = subtractDates(new Date(firstDate.value), new Date(lastDate.value), 1);
   if (isNaN(diff) && typeof diff != 'string')
@@ -67,7 +67,7 @@ function subDays(){
   else
     res.innerHTML="<hr>"+ml[currentLanguage].diff.difference[0]+diff+ml[currentLanguage].diff.difference[1];
 }
-// посчитать банковский процент
+// ГЇГ®Г±Г·ГЁГІГ ГІГј ГЎГ Г­ГЄГ®ГўГ±ГЄГЁГ© ГЇГ°Г®Г¶ГҐГ­ГІ
 function bank() {
   const d1=new Date(firstDate.value);
   const d2=new Date(lastDate.value);
@@ -97,7 +97,7 @@ function bank() {
   } else {
     for (let i=y1; i<=y2; i++) {
       if(i==y1) {
-        diff = subtractDates(d1, new Date(i,11,31)) // в первый день срока %% не считаются
+        diff = subtractDates(d1, new Date(i,11,31)) // Гў ГЇГҐГ°ГўГ»Г© Г¤ГҐГ­Гј Г±Г°Г®ГЄГ  %% Г­ГҐ Г±Г·ГЁГІГ ГѕГІГ±Гї
          / (i%4 == 0 ? 366 : 365);
       } else if (i==y2) {
         diff = subtractDates(new Date(i-1,11,31), d2) / (i%4 == 0 ? 366 : 365);
@@ -110,7 +110,7 @@ function bank() {
   res.innerHTML = "<hr>"+ml[currentLanguage].bank.result + interest.toFixed(2);
 
 }
-// Форматирование даты в виде: гггг-мм-дд
+// Г”Г®Г°Г¬Г ГІГЁГ°Г®ГўГ Г­ГЁГҐ Г¤Г ГІГ» Гў ГўГЁГ¤ГҐ: ГЈГЈГЈГЈ-Г¬Г¬-Г¤Г¤
 function formatDate(date) {
   let s = date.getFullYear()+'-';
   let d = date.getMonth()+1;
@@ -120,7 +120,7 @@ function formatDate(date) {
   if (d<10) s+='0';
   return s+d;
 }
-// вывести требуемую программу в секции раздела article
+// ГўГ»ГўГҐГ±ГІГЁ ГІГ°ГҐГЎГіГҐГ¬ГіГѕ ГЇГ°Г®ГЈГ°Г Г¬Г¬Гі Гў Г±ГҐГЄГ¶ГЁГЁ Г°Г Г§Г¤ГҐГ«Г  article
 function showProg(event){
   let menu = document.querySelectorAll("menu");
   for (let m of menu) {
@@ -128,7 +128,7 @@ function showProg(event){
   }
   event.target.classList.add("selected-menu");
   let b = ml[currentLanguage].button;
-  if(event.target.classList.contains("plusDays") ) { // Выбран первый пункт меню
+  if(event.target.classList.contains("plusDays") ) { // Г‚Г»ГЎГ°Г Г­ ГЇГҐГ°ГўГ»Г© ГЇГіГ­ГЄГІ Г¬ГҐГ­Гѕ
     let now = formatDate(new Date());
     let a = ml[currentLanguage].plus.content;
     document.querySelector(".progDesc").innerHTML = ml[currentLanguage].plus.subtitle;
@@ -136,14 +136,14 @@ function showProg(event){
 <p>${a[1]}: <input type=number id=mydays style="width:5em;"> ${a[2]}</p>
 <p><input type=button onclick="addDays()" value=${b}></p>
 <p id=res></p>`;
-  } else if (event.target.classList.contains("dayDiff")) { // Выбран 2 пункт меню
+  } else if (event.target.classList.contains("dayDiff")) { // Г‚Г»ГЎГ°Г Г­ 2 ГЇГіГ­ГЄГІ Г¬ГҐГ­Гѕ
     let a = ml[currentLanguage].diff.content;
     document.querySelector(".progDesc").innerHTML =ml[currentLanguage].diff.subtitle;
     document.querySelector(".progContent").innerHTML=`${a[0]}: <input type=date id=firstDate >
 <p>${a[1]}: <input type=date id=lastDate ></p>
 <p><input type=button onclick="subDays()" value=${b}></p>
 <p id=res></p>`;
-  } else if (event.target.classList.contains( "moneyDays")) { // Выбран 3 пункт меню
+  } else if (event.target.classList.contains( "moneyDays")) { // Г‚Г»ГЎГ°Г Г­ 3 ГЇГіГ­ГЄГІ Г¬ГҐГ­Гѕ
     let a = ml[currentLanguage].bank.content;
     document.querySelector(".progDesc").innerHTML = ml[currentLanguage].bank.subtitle;
     document.querySelector(".progContent").innerHTML=`${a[0]}: <input type=date id=firstDate >
@@ -155,7 +155,7 @@ function showProg(event){
   }
 }
 
-// смена содержимого на другой язык
+// Г±Г¬ГҐГ­Г  Г±Г®Г¤ГҐГ°Г¦ГЁГ¬Г®ГЈГ® Г­Г  Г¤Г°ГіГЈГ®Г© ГїГ§Г»ГЄ
 function changeContent() {
     document.title = ml[currentLanguage].title;
     document.querySelector("img.country").src = ml[currentLanguage].flag;
@@ -174,7 +174,7 @@ function changeContent() {
     }
 }
 
-// смена языка интерфейса
+// Г±Г¬ГҐГ­Г  ГїГ§Г»ГЄГ  ГЁГ­ГІГҐГ°ГґГҐГ©Г±Г 
 function changeLanguage() {
     if (currentLanguage == RUSSIAN) {
         currentLanguage = ENGLISH;
