@@ -1,0 +1,98 @@
+* {
+    font-family: 'Montserrat', sans-serif;
+    //width: 600px;
+}
+header {
+    background: lightyellow;
+    text-transform: uppercase;
+    font-size: 32px;
+    font-weight: 900;
+    padding: 20px;
+    text-align: center;
+}
+p {
+    margin: 8px 0;
+}
+main {
+    background: teal;
+    display: flex;
+}
+aside {
+    background: beige;
+    width:130px;
+    min-width:130px;
+    padding: 5px 0 0 8px;
+}
+menu {
+    background: beige;
+    cursor: pointer;
+    font-size: 13px;
+    padding-left: 20px;
+    padding-right: 3px;
+}
+menu:hover {
+    background-color: yellow;
+}
+article {
+    background: beige;
+    border-left: 5px solid lightgreen;
+    width: 100%;
+    padding: 5px;
+}
+section {
+    background: beige;
+}
+section h2{
+    font-weight: 300;
+}
+footer {
+    background: lightyellow;
+    font-size: x-small;
+    text-align: right;
+    padding: 8px 0 5px 25px;
+}
+h3 {
+    padding: 5px;
+}
+.copy {
+    float:right;color: blue;
+    padding: 0 10px;
+}
+.selected-menu {
+    background-color: lightgreen;
+}
+.progDesc p{
+    font-style: italic;
+    font-size: small;
+}
+span.colontitle {
+    font-weight: bold;
+    color: darkviolet;
+}
+.country {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    height: 16px;
+    width: 24px;
+}
+
+h2 + p {
+    margin-top: -15px;
+    margin-bottom: 20px;
+}
+input[type=number] {
+    text-align: right;
+}
+/* удаление прокрутки у цифровых полей ввода */
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}

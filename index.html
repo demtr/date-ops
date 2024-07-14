@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="windows-1251">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Some date programs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Open+Sans&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="date-spa.css">
+ </head>
+ <body>
+<header> </header>
+<img class=country src="../img/uk-flag.svg" alt="choose language" onclick="changeLanguage()">
+
+<main>
+<aside>
+<menu class=plusDays>Date plus days</menu>
+<menu class=dayDiff>Date difference</menu>
+<menu class=moneyDays>Bank interest in date interval</menu>
+</aside>
+<article><span class="colontitle">Выбранная программа:</span>
+<section class="progDesc"><p>Выберите программу в меню слева.</p>
+</section>
+<section class="progContent"></section>
+</article>
+</main>
+<footer></footer>
+ </body> 
+<script src="date-ml-text.js"></script>
+<script>
+// прибавить к дате число дней
+function addDays(){
+  let days=mydays.value;
+  let d1=new Date(mydate.value);
+  d1.setDate(d1.getDate()+ +days);
+  res.innerHTML = "<hr>"+ml[currentLanguage].plus.result+": "+d1.toLocaleDateString();
+}
+function subtractDates(d1, d2, mode) {
+  let diff = Math.round((d2-d1)/1000/3600/24);
+  if (isNaN(diff) || diff<365 || !mode)
+    return diff;
+  let yrs = d2.getFullYear() - d1.getFullYear();
+  let mns = d2.getMonth() - d1.getMonth();
+  if (mns<0) {
+    yrs--;
+  }
+  let dys = d2.getDate() - d1.getDate();
+  if (dys < 0) {
+    if (mns == 0) yrs--;
+    mns--;
+    let bf = new Date(d2.getFullYear(),d2.getMonth(),0); // последний день предыдущего месяца
+    dys = bf.getDate()-d1.getDate()+d2.getDate();
+
+  }
+  if (mns < 0) {
+    mns += 12;
+  }
+  return yrs +" "+ ml[currentLanguage].diff.years+" "+
+          mns +" "+  ml[currentLanguage].diff.months+" "+dys;
+}
+// вычесть даты
+function subDays(){
+  const diff = subtractDates(new Date(firstDate.value), new Date(lastDate.value), 1);
+  if (isNaN(diff) && typeof diff != 'string')
+    res.textContent=ml[currentLanguage].twoDates;
+  else
+    res.innerHTML="<hr>"+ml[currentLanguage].diff.difference[0]+diff+ml[currentLanguage].diff.difference[1];
+}
+// посчитать банковский процент
+function bank() {
+  const d1=new Date(firstDate.value);
+  const d2=new Date(lastDate.value);
+  let diff = subtractDates(d1, d2);
+  if (isNaN(diff)) {
+    res.textContent = ml[currentLanguage].twoDates;
+    return;
+  }
+  if (diff<0) {
+    res.textContent = ml[currentLanguage].bank.later;
+    return;
+  }
+  const y1=d1.getFullYear();
+  const y2=d2.getFullYear();
+  let interest = 0;
+  let nonLeap = true;
+  for (let i=y1; i<=y2; i++) {
+    if (i%4 == 0) {
+      nonLeap = false;
+      break;
+    }
+  }
+  if (nonLeap) {
+    interest = +money.value * diff * +percent.value / 100 / 365;
+  } else if(y1==y2) {
+    interest = +money.value * diff * +percent.value / 100 / 366;
+  } else {
+    for (let i=y1; i<=y2; i++) {
+      if(i==y1) {
+        diff = subtractDates(d1, new Date(i,11,31)) // в первый день срока %% не считаются
+         / (i%4 == 0 ? 366 : 365);
+      } else if (i==y2) {
+        diff = subtractDates(new Date(i-1,11,31), d2) / (i%4 == 0 ? 366 : 365);
+      } else {
+        diff = 1;
+      }
+      interest += +money.value * diff * +percent.value / 100;
+    }
+  }
+  res.innerHTML = "<hr>"+ml[currentLanguage].bank.result + interest.toFixed(2);
+
+}
+// Форматирование даты в виде: гггг-мм-дд
+function formatDate(date) {
+  let s = date.getFullYear()+'-';
+  let d = date.getMonth()+1;
+  if (d<10) s+='0';
+  s+=d+'-';
+  d=date.getDate();
+  if (d<10) s+='0';
+  return s+d;
+}
+// вывести требуемую программу в секции раздела article
+function showProg(event){
+  let menu = document.querySelectorAll("menu");
+  for (let m of menu) {
+    m.classList.remove("selected-menu");
+  }
+  event.target.classList.add("selected-menu");
+  let b = ml[currentLanguage].button;
+  if(event.target.classList.contains("plusDays") ) { // Выбран первый пункт меню
+    let now = formatDate(new Date());
+    let a = ml[currentLanguage].plus.content;
+    document.querySelector(".progDesc").innerHTML = ml[currentLanguage].plus.subtitle;
+    document.querySelector(".progContent").innerHTML =`${a[0]}: <input type=date id=mydate value="${now}">
+<p>${a[1]}: <input type=number id=mydays style="width:5em;"> ${a[2]}</p>
+<p><input type=button onclick="addDays()" value=${b}></p>
+<p id=res></p>`;
+  } else if (event.target.classList.contains("dayDiff")) { // Выбран 2 пункт меню
+    let a = ml[currentLanguage].diff.content;
+    document.querySelector(".progDesc").innerHTML =ml[currentLanguage].diff.subtitle;
+    document.querySelector(".progContent").innerHTML=`${a[0]}: <input type=date id=firstDate >
+<p>${a[1]}: <input type=date id=lastDate ></p>
+<p><input type=button onclick="subDays()" value=${b}></p>
+<p id=res></p>`;
+  } else if (event.target.classList.contains( "moneyDays")) { // Выбран 3 пункт меню
+    let a = ml[currentLanguage].bank.content;
+    document.querySelector(".progDesc").innerHTML = ml[currentLanguage].bank.subtitle;
+    document.querySelector(".progContent").innerHTML=`${a[0]}: <input type=date id=firstDate >
+<p>${a[1]}: <input type=date id=lastDate ></p>
+<p>${a[2]}: <input type=number id=money style="width:10em;" ></p>
+<p>${a[3]}: <input type=number id=percent style="width:5em;" ></p>
+<p><input type=button onclick="bank()" value=${b}></p>
+<p id=res></p>`;
+  }
+}
+
+// смена содержимого на другой язык
+function changeContent() {
+    document.title = ml[currentLanguage].title;
+    document.querySelector("img.country").src = ml[currentLanguage].flag;
+    document.getElementsByTagName("HEADER")[0].innerHTML = ml[currentLanguage].header;
+    document.getElementsByTagName("FOOTER")[0].innerHTML = ml[currentLanguage].footer;
+    document.getElementsByTagName('ASIDE')[0].childNodes[0].textContent = ml[currentLanguage].aside;
+    document.querySelector(".progDesc").innerHTML = ml[currentLanguage].subtitle;
+    document.querySelector(".progContent").innerHTML = "";
+    document.querySelector("menu.plusDays").textContent=ml[currentLanguage].plus.head;
+    document.querySelector("menu.dayDiff").textContent=ml[currentLanguage].diff.head;
+    document.querySelector("menu.moneyDays").textContent=ml[currentLanguage].bank.head;
+    document.querySelector("span.colontitle").textContent=ml[currentLanguage].colontitle;
+    let menu = document.querySelectorAll("menu");
+    for (let m of menu) {
+        m.classList.remove("selected-menu");
+    }
+}
+
+// смена языка интерфейса
+function changeLanguage() {
+    if (currentLanguage == RUSSIAN) {
+        currentLanguage = ENGLISH;
+    } else if (currentLanguage == ENGLISH) {
+        currentLanguage = RUSSIAN;
+    }
+    changeContent();
+}
+
+window.onload = function () {
+  let menu = document.querySelectorAll("menu");
+  for (let m of menu) {
+     m.addEventListener('click', showProg);
+  }
+  changeContent();
+}
+</script>
+</html>
